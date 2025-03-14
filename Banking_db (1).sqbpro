@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/LENOVO/Downloads/Banking_db (1).db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser query" current="2"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1375"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="accounts" custom_title="0" dock_id="1" table="4,8:mainaccounts"/><dock_state state="000000ff00000000fd00000001000000020000000000000000fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000011e00ffffff000000000000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1*">SELECT customers.name, customers.age, loans.loan_amount, loans.loan_status
+FROM customers
+JOIN loans ON customers.customer_id = loans.customer_id
+WHERE loans.loan_status = 'Approved';
+
+SELECT customers.name, SUM(accounts.balance) AS total_balance
+FROM customers
+JOIN accounts ON customers.customer_id = accounts.customer_id
+GROUP BY customers.customer_id;
+
+SELECT branches.branch_name, SUM(accounts.balance) AS total_balance
+FROM branches
+JOIN accounts ON branches.branch_id = accounts.branch_id
+GROUP BY branches.branch_id
+ORDER BY total_balance DESC
+
+SELECT transaction_status, COUNT(*) AS total_transactions
+FROM transactions
+GROUP BY transaction_status;
+
+SELECT transaction_id, transaction_amount, transaction_date
+FROM transactions
+WHERE transaction_date BETWEEN '2024-01-01' AND '2024-12-31';
+
+LIMIT 5;
+
+SELECT customer_id, name, credit_score 
+FROM customers
+WHERE credit_score &gt; 750;
+
+SELECT gender, AVG(age) AS average_age
+FROM customers
+WHERE age IS NOT NULL
+GROUP BY gender;
+
+SELECT loan_id, customer_id, loan_amount 
+FROM loans
+ORDER BY loan_amount DESC
+LIMIT 10;
+
+SELECT c.name, a.account_id, a.balance, l.loan_amount, l.loan_status
+FROM customers c
+JOIN accounts a ON c.customer_id = a.customer_id
+JOIN loans l ON c.customer_id = l.customer_id
+WHERE l.loan_status = 'Approved';
+
+SELECT t.transaction_id, t.transaction_amount, t.transaction_date, 
+       c.name AS customer_name, b.branch_name, b.branch_location
+FROM transactions t
+JOIN accounts a ON t.account_id = a.account_id
+JOIN branches b ON a.branch_id = b.branch_id
+JOIN customers c ON a.customer_id = c.customer_id
+WHERE t.transaction_status = 'Completed';
+
+SELECT c.name AS customer_name, l.loan_amount, l.loan_status, 
+       t.transaction_id, t.transaction_amount, t.transaction_date
+FROM customers c
+JOIN loans l ON c.customer_id = l.customer_id
+JOIN accounts a ON c.customer_id = a.customer_id
+JOIN transactions t ON a.account_id = t.account_id
+WHERE l.loan_status = 'Approved'
+ORDER BY t.transaction_date DESC;
+
+
+
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
